@@ -1,0 +1,2 @@
+# Ignore GraphQL CodeGen files
+src/gql/*
