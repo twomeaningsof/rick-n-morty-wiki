@@ -9,7 +9,13 @@ const lifeStatusImages = {
   unknown: unknownIcon,
 };
 
-const Card = ({ image, name, status, ...rest }) => {
+export interface CharacterInfo {
+  image: string;
+  name: string;
+  status: string;
+}
+
+const Card = ({ image, name, status, ...rest }: CharacterInfo) => {
   return (
     <div className='m-8 border border border-black rounded-md drop-shadow-2xl overflow-hidden' {...rest}>
       <div className='h-full relative flex flex-col'>
@@ -17,7 +23,7 @@ const Card = ({ image, name, status, ...rest }) => {
         <div className='max-w-[300px] h-full flex justify-between items-center bg-white p-2'>
           <div className='ml-2 flex font-mali text-2xl'>{name}</div>
           <Image
-            src={lifeStatusImages[status.toLowerCase()]}
+            src={lifeStatusImages[status.toLowerCase() as keyof object]}
             width={50}
             height={50}
             alt='Life Status Img missing'

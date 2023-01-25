@@ -33,7 +33,7 @@ const CharactersPage = () => {
 
       <div className='flex flex-wrap justify-around'>
         {data?.characters?.results &&
-          data.characters.results.map(({ image, name, status }, index) => (
+          data.characters.results.map(({ image, name, status }, index: number) => (
             <Card image={image} name={name} status={status} key={index} />
           ))}
       </div>
