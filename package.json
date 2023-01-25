@@ -1,7 +1,8 @@
 {
   "name": "rick-n-morty-wiki",
   "scripts": {
-    "dev": "concurrently \"next dev\" \"yarn graphql-codegen --watch\"",
+    "dev": "concurrently \"next dev\" \"npm run code-gen\"",
+    "code-gen": "graphql-codegen --watch",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
