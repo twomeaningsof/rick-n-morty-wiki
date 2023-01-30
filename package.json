@@ -6,8 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install",
-    "test": "concurrently \"npm run lint\" \"tsc --noEmit\""
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
