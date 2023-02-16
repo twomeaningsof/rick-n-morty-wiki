@@ -14,7 +14,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
       <title>Rick and Morty Wiki</title>
       <link rel='preconnect' href='https://fonts.googleapis.com' />
       <link rel='preconnect' href='https://fonts.gstatic.com' />
-      <link href='https://fonts.googleapis.com/css2?family=Mali&display=swap' rel='stylesheet' />
+      <link
+        href='https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Mali:wght@400;500&display=swap'
+        rel='stylesheet'
+      />
     </Head>
     <ApolloProvider client={client}>
       <Component {...pageProps} />
