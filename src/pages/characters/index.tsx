@@ -37,6 +37,10 @@ const GET_CHARACTERS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
+const getServerSideQueryParamFromContext = (context: NextPageContext, queryParamKey: string) => {
+  return context.query[queryParamKey] || null;
+};
+
 const removeQueryParamsFromRouter = ({ router, queryParamKey }: { router: NextRouter; queryParamKey: string }) => {
   delete router.query[queryParamKey];
 
@@ -261,9 +265,9 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
 export default CharactersPage;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const name = typeof context.query.name === "string" ? context.query.name : null;
-  const gender = typeof context.query.gender === "string" ? context.query.gender : null;
-  const status = typeof context.query.status === "string" ? context.query.status : null;
+  const name = getServerSideQueryParamFromContext(context, "name");
+  const gender = getServerSideQueryParamFromContext(context, "gender");
+  const status = getServerSideQueryParamFromContext(context, "status");
 
   return {
     props: {
