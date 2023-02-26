@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { graphql } from "../../gql/";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Image from "next/image";
@@ -10,14 +10,15 @@ import SearchInput from "../../components/SearchInput";
 import Select from "../../components/Select";
 import useDebounce from "../../hooks/useDebounce";
 import logo from "../../../public/logo.png";
+import { NextPageContext } from "next";
 
 const genderOptions = ["Female", "Male", "Genderless", "Unknown"];
 const lifeStatusOptions = ["Alive", "Dead", "Unknown"];
 
-interface RouterQueryParams {
-  name?: string;
-  gender?: string;
-  status?: string;
+interface CharactersPagePageProps {
+  name: string | null;
+  gender: string | null;
+  status: string | null;
 }
 
 const GET_CHARACTERS_QUERY = graphql(/* GraphQL */ `
@@ -36,66 +37,152 @@ const GET_CHARACTERS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-const CharactersPage = () => {
+const removeQueryParamsFromRouter = ({ router, queryParamKey }: { router: NextRouter; queryParamKey: string }) => {
+  delete router.query[queryParamKey];
+
+  return router.replace(
+    {
+      pathname: router.pathname,
+      query: router.query,
+    },
+    undefined,
+    /**
+     * Do not refresh the page
+     */
+    { shallow: true }
+  );
+};
+
+const addQueryParamToRouter = ({
+  router,
+  queryParamKey,
+  queryParamValue,
+}: {
+  router: NextRouter;
+  queryParamKey: string;
+  queryParamValue?: string;
+}) => {
+  return router.push(
+    {
+      pathname: "/characters",
+      query: {
+        ...router.query,
+        [queryParamKey]: queryParamValue,
+      },
+    },
+    undefined,
+    {
+      shallow: true,
+    }
+  );
+};
+
+const updateQueryParamForRouter = ({
+  router,
+  queryParamKey,
+  queryParamValue,
+}: {
+  router: NextRouter;
+  queryParamKey: string;
+  queryParamValue?: string;
+}) => {
+  // We don't want to keep empty URL query params
+  if (queryParamValue === "") {
+    return removeQueryParamsFromRouter({ router, queryParamKey });
+  } else {
+    return addQueryParamToRouter({ router, queryParamKey, queryParamValue });
+  }
+};
+
+function useCharactersList({ name, gender, status }: CharactersPagePageProps) {
   const router = useRouter();
-  const { name, gender, status }: RouterQueryParams = router.query;
+  const [searchInput, setSearchInput] = useState(name || "");
+  const [genderFilter, setGenderFilter] = useState(gender || "");
+  const [lifeStatusFilter, setLifeStatusFilter] = useState(status || "");
+  const debouncedSearchInput = useDebounce(searchInput, 500);
   const { data, loading, error, fetchMore } = useQuery(GET_CHARACTERS_QUERY, {
     variables: {
       page: 1,
-      name: "",
-      gender: "",
-      status: "",
+      name: debouncedSearchInput,
+      gender: genderFilter,
+      status: lifeStatusFilter,
     },
   });
-  const [searchInput, setSearchInput] = useState("");
-  const [genderFilter, setGenderFilter] = useState("");
-  const [lifeStatusFilter, setLifeStatusFilter] = useState("");
-  const debouncedSearchInput = useDebounce(searchInput, 500);
 
-  const filterData = (characterName?: string, gender?: string, lifeStatus?: string) => {
-    fetchMore({
-      variables: {
-        page: 1,
-        name: typeof characterName === "string" ? characterName : searchInput,
-        gender: typeof gender === "string" ? gender : genderFilter,
-        status: typeof lifeStatus === "string" ? lifeStatus : lifeStatusFilter,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return fetchMoreResult;
-      },
-    });
-    if (typeof characterName === "string") setSearchInput(characterName);
-    if (typeof gender === "string") setGenderFilter(gender);
-    if (typeof lifeStatus === "string") setLifeStatusFilter(lifeStatus);
+  const handleSetName = async (value: string) => {
+    setSearchInput(value);
+    await updateQueryParamForRouter({ router, queryParamKey: "name", queryParamValue: value });
   };
 
-  useEffect(() => filterData(name || undefined, gender || undefined, status || undefined), [name, gender, status]);
+  const handleSetGender = async (value: string) => {
+    setGenderFilter(value);
+    await updateQueryParamForRouter({ router, queryParamKey: "gender", queryParamValue: value });
+  };
 
-  useEffect(() => filterData(debouncedSearchInput), [debouncedSearchInput]);
+  const handleSetStatus = async (value: string) => {
+    setLifeStatusFilter(value);
+    await updateQueryParamForRouter({ router, queryParamKey: "status", queryParamValue: value });
+  };
 
-  useEffect(() => {
-    if (searchInput || genderFilter || lifeStatusFilter) {
-      router.push(
-        `/characters?${searchInput?.length ? `name=${searchInput}&` : ""}${
-          genderFilter?.length ? `gender=${genderFilter}&` : ""
-        }${lifeStatusFilter?.length ? `status=${lifeStatusFilter}` : ""}`
-      );
-    }
-  }, [searchInput, genderFilter, lifeStatusFilter]);
+  const handleFetchMore = () => {
+    return fetchMore({
+      variables: {
+        page: data?.characters?.info?.next,
+        name: debouncedSearchInput,
+        gender: genderFilter,
+        status: lifeStatusFilter,
+      },
+      updateQuery: (oldData, { fetchMoreResult }) => {
+        if (!fetchMoreResult.characters?.results) return oldData;
+        return {
+          ...oldData,
+          characters: {
+            ...oldData.characters,
+            info: {
+              ...fetchMoreResult.characters?.info,
+            },
+            results: [...(oldData.characters?.results || []), ...fetchMoreResult.characters.results],
+          },
+        };
+      },
+    });
+  };
 
-  if (loading)
-    return (
-      <div className='w-full min-h-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
-        <p className='w-full h-screen flex justify-center items-center font-mali text-white'>Loading...</p>
-      </div>
-    );
-  if (error)
-    return (
-      <div className='w-full min-h-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
-        <p className='flex h-screen flex justify-center items-center font-mali text-white'>Error: {error.message}</p>
-      </div>
-    );
+  return {
+    characters: data?.characters,
+    dataLength: data?.characters?.results?.length || 0,
+    hasMore: data?.characters?.info?.next !== null,
+    loading,
+    error,
+    searchInput,
+    genderFilter,
+    lifeStatusFilter,
+    handleSetName,
+    handleSetGender,
+    handleSetStatus,
+    handleFetchMore,
+  };
+}
+
+const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
+  const {
+    characters,
+    dataLength,
+    hasMore,
+    loading,
+    error,
+    searchInput,
+    genderFilter,
+    lifeStatusFilter,
+    handleSetName,
+    handleSetGender,
+    handleSetStatus,
+    handleFetchMore,
+  } = useCharactersList({
+    name,
+    gender,
+    status,
+  });
 
   return (
     <div className='w-full min-h-full bg-black/[.85] text-[14px] [background-image:url("../../public/endless-constellation.svg")]'>
@@ -114,20 +201,20 @@ const CharactersPage = () => {
         </h1>
       </div>
       <div className='flex flex-wrap flex-col md:flex-row md:m-2 lg:ml-10 xl:ml-16 md:gap-y-4 gap-x-8 xl:gap-x-14 justify-center lg:justify-start items-center'>
-        <SearchInput value={searchInput} placeholder='Search..' className='max-md:mb-5' onChange={setSearchInput} />
+        <SearchInput value={searchInput} placeholder='Search..' className='max-md:mb-5' onChange={handleSetName} />
         <Select
           label='Gender:'
           options={genderOptions}
           selected={genderFilter}
           className='max-md:mb-5'
-          onInput={(v) => filterData(undefined, v)}
+          onInput={handleSetGender}
         />
         <Select
           label='Life Status:'
           options={lifeStatusOptions}
           selected={lifeStatusFilter}
           className='max-md:mb-5'
-          onInput={(v) => filterData(undefined, undefined, v)}
+          onInput={handleSetStatus}
         />
         <Link
           href={"/"}
@@ -136,49 +223,53 @@ const CharactersPage = () => {
           Home
         </Link>
       </div>
-      <InfiniteScroll
-        dataLength={data?.characters?.results?.length || 0}
-        next={async () =>
-          await fetchMore({
-            variables: {
-              page: data?.characters?.info?.next,
-              name: searchInput,
-              gender: genderFilter,
-              status: lifeStatusFilter,
-            },
-            updateQuery: (oldData, { fetchMoreResult }) => {
-              if (!fetchMoreResult.characters?.results) return oldData;
-              return {
-                ...oldData,
-                characters: {
-                  ...oldData.characters,
-                  info: {
-                    ...fetchMoreResult.characters?.info,
-                  },
-                  results: [...(oldData.characters?.results || []), ...fetchMoreResult.characters.results],
-                },
-              };
-            },
-          })
-        }
-        hasMore={!!data?.characters?.info?.next}
-        loader={<h4 className='font-mali'>Loading more...</h4>}
-        endMessage={
-          data?.characters?.results?.length === 0 ? (
-            <p className='flex justify-center mt-20 mb-10 font-mali text-white text-center text-4xl font-medium'>
-              Sorry, there is no match.
-            </p>
-          ) : (
-            <p className='flex justify-center mt-4 mb-10 font-mali text-white text-center text-4xl font-medium'>
-              Yay! You have seen it all.
-            </p>
-          )
-        }
-      >
-        {data?.characters?.results && <CardList cardListData={data?.characters} />}
-      </InfiniteScroll>
+      {loading && (
+        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+          <p className='w-full  flex justify-center items-center font-mali text-white'>Loading...</p>
+        </div>
+      )}
+      {error && (
+        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+          <p className=' flex justify-center items-center font-mali text-white'>Error: {error.message}</p>
+        </div>
+      )}
+      {!loading && !error && dataLength > 0 && (
+        <InfiniteScroll
+          dataLength={dataLength}
+          next={handleFetchMore}
+          hasMore={hasMore}
+          loader={<h4 className='font-mali'>Loading more...</h4>}
+          endMessage={
+            dataLength === 0 ? (
+              <p className='flex justify-center mt-20 mb-10 font-mali text-white text-center text-4xl font-medium'>
+                Sorry, there is no match.
+              </p>
+            ) : (
+              <p className='flex justify-center mt-4 mb-10 font-mali text-white text-center text-4xl font-medium'>
+                Yay! You have seen it all.
+              </p>
+            )
+          }
+        >
+          {characters && <CardList cardListData={characters} />}
+        </InfiniteScroll>
+      )}
     </div>
   );
 };
 
 export default CharactersPage;
+
+export const getServerSideProps = async (context: NextPageContext) => {
+  const name = typeof context.query.name === "string" ? context.query.name : null;
+  const gender = typeof context.query.gender === "string" ? context.query.gender : null;
+  const status = typeof context.query.status === "string" ? context.query.status : null;
+
+  return {
+    props: {
+      name,
+      gender,
+      status,
+    },
+  };
+};
