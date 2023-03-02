@@ -5,6 +5,7 @@ module.exports = {
     extend: {},
     fontFamily: {
       mali: ["Mali", "cursive"],
+      gochi: ["Gochi Hand", "cursive"],
     },
   },
   plugins: [],

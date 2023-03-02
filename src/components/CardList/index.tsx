@@ -2,12 +2,10 @@ import { graphql, useFragment, FragmentType } from "../../gql";
 import Card from "../Card";
 
 const CARD_LIST_QUERY_FRAGMENT = graphql(/* GraphQL */ `
-  fragment CardList_QueryFragment on Query {
-    characters {
-      results {
-        id
-        ...Card_CardFragment
-      }
+  fragment CardList_QueryFragment on Characters {
+    results {
+      id
+      ...Card_CardFragment
     }
   }
 `);
@@ -21,7 +19,7 @@ const CardList = (props: CardListProps) => {
 
   return (
     <div className='flex flex-wrap justify-around'>
-      {query?.characters?.results?.map((cardData, index: number) => {
+      {query?.results?.map((cardData, index: number) => {
         if (!cardData) return null;
         return <Card cardData={cardData} key={index} />;
       })}
