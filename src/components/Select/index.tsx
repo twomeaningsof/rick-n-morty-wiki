@@ -8,7 +8,7 @@ type SelectProps = {
   onInput: (value: string) => void;
 };
 
-const Select = ({ label, options, selected, className, onInput }: SelectProps) => (
+const Select = ({ label, options, selected, className, onInput, ...props }: SelectProps) => (
   <div
     className={classNames(
       "w-56 h-10 bg-white rounded-lg font-mali border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_30px_#12b0c9]",
@@ -21,6 +21,7 @@ const Select = ({ label, options, selected, className, onInput }: SelectProps) =
         className='w-24 mr-7 [text-align-last:center] font-normal tracking-wider cursor-pointer focus:underline focus:underline-offset-2'
         onInput={({ currentTarget: { value } }) => onInput(value)}
         value={selected}
+        {...props}
       >
         <option value=''>All</option>
         {options.map((option, index) => (

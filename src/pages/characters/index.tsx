@@ -50,9 +50,6 @@ const removeQueryParamsFromRouter = ({ router, queryParamKey }: { router: NextRo
       query: router.query,
     },
     undefined,
-    /**
-     * Do not refresh the page
-     */
     { shallow: true }
   );
 };
@@ -90,7 +87,6 @@ const updateQueryParamForRouter = ({
   queryParamKey: string;
   queryParamValue?: string;
 }) => {
-  // We don't want to keep empty URL query params
   if (queryParamValue === "") {
     return removeQueryParamsFromRouter({ router, queryParamKey });
   } else {
@@ -237,7 +233,7 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
           <p className=' flex justify-center items-center font-mali text-white'>Error: {error.message}</p>
         </div>
       )}
-      {!loading && !error && dataLength > 0 && (
+      {!loading && !error && (
         <InfiniteScroll
           dataLength={dataLength}
           next={handleFetchMore}

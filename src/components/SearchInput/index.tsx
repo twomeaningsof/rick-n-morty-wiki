@@ -9,7 +9,7 @@ type SearchInputProps = {
   onChange: (value: string) => void;
 };
 
-const SearchInput = ({ value, placeholder, className, onChange }: SearchInputProps) => (
+const SearchInput = ({ className, onChange, ...props }: SearchInputProps) => (
   <div
     className={classNames(
       "w-60 h-10 flex justify-between bg-white rounded-lg text-base border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_30px_#12b0c9]",
@@ -18,10 +18,9 @@ const SearchInput = ({ value, placeholder, className, onChange }: SearchInputPro
   >
     <input
       className='w-40 ml-1 p-2 bg-transparent font-mali'
-      value={value}
-      placeholder={placeholder}
       spellCheck={false}
       onChange={({ currentTarget: { value } }) => onChange(value)}
+      {...props}
     />
     <Image className='w-[20px] h-auto m-2 mr-3 object-contain' src={search} alt={"search icon"} />
   </div>
