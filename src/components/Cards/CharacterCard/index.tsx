@@ -1,8 +1,8 @@
-import { graphql, useFragment, FragmentType } from "../../gql";
+import { graphql, useFragment, FragmentType } from "../../../gql";
 import Image from "next/image";
-import aliveIcon from "../../../public/alive.png";
-import deadIcon from "../../../public/dead.png";
-import unknownIcon from "../../../public/unknown.png";
+import aliveIcon from "../../../../public/alive.png";
+import deadIcon from "../../../../public/dead.png";
+import unknownIcon from "../../../../public/unknown.png";
 
 const lifeStatusImages = {
   alive: aliveIcon,
@@ -10,24 +10,24 @@ const lifeStatusImages = {
   unknown: unknownIcon,
 };
 
-const CARD_FRAGMENT = graphql(/* GraphQL */ `
-  fragment Card_CardFragment on Character {
+const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
+  fragment CharacterCard_CardFragment on Character {
     image
     name
     status
   }
 `);
 
-type CardProps = {
-  cardData: FragmentType<typeof CARD_FRAGMENT>;
+type CharacterCardProps = {
+  cardData: FragmentType<typeof CHARACTER_CARD_FRAGMENT>;
 };
 
 const isStatus = (status?: string | null): status is keyof typeof lifeStatusImages => {
   return status === "alive" || status === "dead" || status === "unknown";
 };
 
-const Card = ({ cardData, ...rest }: CardProps) => {
-  const { image, name, status: baseStatus } = useFragment(CARD_FRAGMENT, cardData);
+const CharacterCard = ({ cardData, ...rest }: CharacterCardProps) => {
+  const { image, name, status: baseStatus } = useFragment(CHARACTER_CARD_FRAGMENT, cardData);
 
   const status = baseStatus?.toLowerCase();
 
@@ -55,4 +55,4 @@ const Card = ({ cardData, ...rest }: CardProps) => {
   );
 };
 
-export default Card;
+export default CharacterCard;
