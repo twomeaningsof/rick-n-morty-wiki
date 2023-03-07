@@ -20,7 +20,7 @@ const WelcomePage = () => {
           href={"/episodes"}
           className='w-40 h-10 flex justify-center items-center rounded bg-white font-mali border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_25px_#12b0c9]'
         >
-          Episodes (empty)
+          Episodes
         </Link>
       </div>
     </div>
