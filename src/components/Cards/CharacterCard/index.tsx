@@ -1,13 +1,9 @@
 import { graphql, useFragment, FragmentType } from "../../../gql";
-import Image from "next/image";
-import aliveIcon from "../../../../public/alive.png";
-import deadIcon from "../../../../public/dead.png";
-import unknownIcon from "../../../../public/unknown.png";
 
 const lifeStatusImages = {
-  alive: aliveIcon,
-  dead: deadIcon,
-  unknown: unknownIcon,
+  alive: "alive.png",
+  dead: "dead.png",
+  unknown: "unknown.png",
 };
 
 const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
@@ -34,14 +30,14 @@ const CharacterCard = ({ cardData, ...rest }: CharacterCardProps) => {
   if (!isStatus(status)) return null;
   return (
     <div
-      className='m-8 overflow-hidden border border-[2px] border-[#bfd84d] rounded-md drop-shadow-2xl drop-shadow-[0px_0px_17px_#12b0c9]'
+      className='m-8 overflow-hidden border-[2px] border-[#bfd84d] rounded-md drop-shadow-[0px_0px_17px_#12b0c9]'
       {...rest}
     >
       <div className='h-full relative flex flex-col'>
-        {image && <Image src={image} width={300} height={300} alt='Character image' />}
+        {image && <img src={image} width={300} height={300} alt='Character image' />}
         <div className='max-w-[300px] h-full p-2 flex justify-between items-center bg-white cursor-pointer'>
           <div className='ml-2 flex font-mali text-2xl select-none'>{name}</div>
-          <Image
+          <img
             src={lifeStatusImages[status]}
             width={50}
             height={50}

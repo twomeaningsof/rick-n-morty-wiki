@@ -23,7 +23,7 @@ const Card = ({ cardData, ...rest }: EpisodeCardProps) => {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className='m-8 overflow-hidden border border-[2px] border-[#bfd84d] rounded-md drop-shadow-2xl drop-shadow-[0px_0px_17px_#12b0c9]'
+      className='m-8 overflow-hidden border-[2px] border-[#bfd84d] rounded-md drop-shadow-[0px_0px_17px_#12b0c9]'
       {...rest}
     >
       <div className='h-full flex flex-col'>
@@ -31,7 +31,7 @@ const Card = ({ cardData, ...rest }: EpisodeCardProps) => {
           <div className='mx-4 flex font-mali font-medium text-2xl select-none'>{name}</div>
           <div
             className={classNames(
-              "mx-4 flex font-mali text-xl block opacity-100 transition-[opacity] ease-in delay-150 select-none",
+              "mx-4 font-mali text-xl opacity-100 transition-[opacity] ease-in delay-150 select-none",
               {
                 "opacity-0 absolute invisible": !isHovered,
               }

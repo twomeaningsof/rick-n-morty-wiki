@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { graphql } from "../../gql/";
-import { NextRouter, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ColorRing } from "react-loader-spinner";
@@ -11,6 +11,8 @@ import SearchInput from "../../components/SearchInput";
 import useDebounce from "../../hooks/useDebounce";
 import logo from "../../../public/logo.png";
 import { NextPageContext } from "next";
+import getServerSideQueryParamFromContext from "../../helpers/getServerSideQueryParamFromContext";
+import updateQueryParamForRouter from "../../helpers/routerQueryManipulation";
 
 interface EpisodesPagePageProps {
   name: string | null;
@@ -31,63 +33,6 @@ const GET_EPISODES_QUERY = graphql(/* GraphQL */ `
     }
   }
 `);
-
-const getServerSideQueryParamFromContext = (context: NextPageContext, queryParamKey: string) => {
-  return context.query[queryParamKey] || null;
-};
-
-const removeQueryParamsFromRouter = ({ router, queryParamKey }: { router: NextRouter; queryParamKey: string }) => {
-  delete router.query[queryParamKey];
-
-  return router.replace(
-    {
-      pathname: router.pathname,
-      query: router.query,
-    },
-    undefined,
-    { shallow: true }
-  );
-};
-
-const addQueryParamToRouter = ({
-  router,
-  queryParamKey,
-  queryParamValue,
-}: {
-  router: NextRouter;
-  queryParamKey: string;
-  queryParamValue?: string;
-}) => {
-  return router.push(
-    {
-      pathname: router.pathname,
-      query: {
-        ...router.query,
-        [queryParamKey]: queryParamValue,
-      },
-    },
-    undefined,
-    {
-      shallow: true,
-    }
-  );
-};
-
-const updateQueryParamForRouter = ({
-  router,
-  queryParamKey,
-  queryParamValue,
-}: {
-  router: NextRouter;
-  queryParamKey: string;
-  queryParamValue?: string;
-}) => {
-  if (queryParamValue === "") {
-    return removeQueryParamsFromRouter({ router, queryParamKey });
-  } else {
-    return addQueryParamToRouter({ router, queryParamKey, queryParamValue });
-  }
-};
 
 function useEpisodesList({ name }: EpisodesPagePageProps) {
   const router = useRouter();
@@ -195,8 +140,7 @@ const EpisodesPage = ({ name }: EpisodesPagePageProps) => {
           next={handleFetchMore}
           hasMore={hasMore}
           loader={
-            <h4 className='w-full flex justify-center font-mali'>
-              Loading more
+            <div className='w-full flex justify-center font-mali'>
               <ColorRing
                 visible={true}
                 height='80'
@@ -204,7 +148,7 @@ const EpisodesPage = ({ name }: EpisodesPagePageProps) => {
                 ariaLabel='blocks-loading'
                 colors={["#bfd84d", "#9db33c", "#429EA6", "#12b0c9", "#51E5FF"]}
               />
-            </h4>
+            </div>
           }
           endMessage={
             dataLength === 0 ? (
