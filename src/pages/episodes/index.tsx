@@ -116,7 +116,7 @@ const EpisodesPage = ({ name }: EpisodesPagePageProps) => {
         </Link>
       </div>
       {loading && (
-        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+        <div className='w-full mt-20 bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
           <div className='w-full  flex justify-center items-center font-mali text-white'>
             <p className='mr-4'>Loading</p>
             <ColorRing

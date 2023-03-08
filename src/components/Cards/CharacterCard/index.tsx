@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { graphql, useFragment, FragmentType } from "../../../gql";
 
 const lifeStatusImages = {
@@ -8,6 +9,7 @@ const lifeStatusImages = {
 
 const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
   fragment CharacterCard_CardFragment on Character {
+    id
     image
     name
     status
@@ -23,7 +25,7 @@ const isStatus = (status?: string | null): status is keyof typeof lifeStatusImag
 };
 
 const CharacterCard = ({ cardData, ...rest }: CharacterCardProps) => {
-  const { image, name, status: baseStatus } = useFragment(CHARACTER_CARD_FRAGMENT, cardData);
+  const { id, image, name, status: baseStatus } = useFragment(CHARACTER_CARD_FRAGMENT, cardData);
 
   const status = baseStatus?.toLowerCase();
 
@@ -35,17 +37,19 @@ const CharacterCard = ({ cardData, ...rest }: CharacterCardProps) => {
     >
       <div className='h-full relative flex flex-col'>
         {image && <img src={image} width={300} height={300} alt='Character image' />}
-        <div className='max-w-[300px] h-full p-2 flex justify-between items-center bg-white cursor-pointer'>
-          <div className='ml-2 flex font-mali text-2xl select-none'>{name}</div>
-          <img
-            src={lifeStatusImages[status]}
-            width={50}
-            height={50}
-            alt='Life Status Img missing'
-            title={`Life status ${status}`}
-            className='m-2 ml-4 cursor-help'
-          />
-        </div>
+        <Link href={`/characters/character/${id}`}>
+          <div className='max-w-[300px] h-full p-2 flex justify-between items-center bg-white cursor-pointer'>
+            <div className='ml-2 flex font-mali text-2xl select-none'>{name}</div>
+            <img
+              src={lifeStatusImages[status]}
+              width={50}
+              height={50}
+              alt='Life Status Img missing'
+              title={`Life status ${status}`}
+              className='m-2 ml-4 cursor-help'
+            />
+          </div>
+        </Link>
       </div>
     </div>
   );

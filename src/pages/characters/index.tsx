@@ -168,7 +168,7 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
         </Link>
       </div>
       {loading && (
-        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+        <div className='w-full mt-20 bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
           <div className='w-full  flex justify-center items-center font-mali text-white'>
             <p className='mr-4'>Loading</p>
             <ColorRing
@@ -192,7 +192,7 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
           next={handleFetchMore}
           hasMore={hasMore}
           loader={
-            <div className='w-full flex justify-center font-mali'>
+            <div className='w-full mt-14 flex justify-center font-mali'>
               <ColorRing
                 visible={true}
                 height='80'
