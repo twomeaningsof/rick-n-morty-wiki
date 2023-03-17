@@ -42,8 +42,6 @@ const useCharacter = ({ characterID }: { characterID: string }) => {
 const CharacterPage = ({ characterID }: { characterID: string }) => {
   const { character, episodesTheyPlayIn, loading, error } = useCharacter({ characterID });
 
-  if (!character) return null;
-
   return (
     <div className='w-full min-h-full flex flex-col bg-black/[.85] font-mali text-white [background-image:url("../../public/endless-constellation.svg")]'>
       {loading && (
@@ -70,21 +68,21 @@ const CharacterPage = ({ characterID }: { characterID: string }) => {
           <div className='mt-10 flex flex-col sm:ml-10 sm:flex-row sm:items-center'>
             <div className='max-w-[350px] mb-6 flex flex-col items-center self-center justify-center'>
               <img
-                src={character.image || undefined}
+                src={character?.image || undefined}
                 alt={"character img"}
                 className={
                   "w-[200px] h-[200px] sm:w-auto sm:h-auto rounded-full border-[1px] border-[#bfd84d] drop-shadow-[0px_0px_20px_#12b0c9]"
                 }
               />
               <div className='mt-6 text-4xl tracking-wide text-center text-[#bfd84d] drop-shadow-[0px_0px_2px_#12b0c9]'>
-                {character.name}
+                {character?.name}
               </div>
             </div>
             <div className='mb-3 sm:mb-20 mx-11 flex-start'>
               <CharacterDetailParagraph label='ID' value={characterID} />
-              <CharacterDetailParagraph label='Status' value={character.status} />
-              <CharacterDetailParagraph label='Gender' value={character.gender} />
-              <CharacterDetailParagraph label='Last known location' value={character.location?.name} />
+              <CharacterDetailParagraph label='Status' value={character?.status} />
+              <CharacterDetailParagraph label='Gender' value={character?.gender} />
+              <CharacterDetailParagraph label='Last known location' value={character?.location?.name} />
             </div>
           </div>
           <div className='mt-2 mx-10'>
