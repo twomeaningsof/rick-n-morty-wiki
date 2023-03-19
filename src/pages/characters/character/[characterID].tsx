@@ -4,8 +4,9 @@ import Link from "next/link";
 import { graphql } from "../../../gql";
 import { ColorRing } from "react-loader-spinner";
 import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
-import CharacterDetailParagraph from "../../../components/CharacterDetailPararaph";
+import CharacterDetailParagraph from "../../../components/CharacterDetailParagraph";
 import EpisodeTag from "../../../components/EpisodeTag";
+import Error from "../../../components/DataState/Error";
 
 const GET_CHARACTER_QUERY = graphql(/* GraphQL */ `
   query GetCharacter_Query($id: ID!) {
@@ -29,10 +30,10 @@ const GET_CHARACTER_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-const CharacterPage = ({ characterID }: { characterID: string }) => {
+const CharacterPage = ({ characterId }: { characterId: string }) => {
   const { data, loading, error } = useQuery(GET_CHARACTER_QUERY, {
     variables: {
-      id: characterID,
+      id: characterId,
     },
   });
 
@@ -52,18 +53,14 @@ const CharacterPage = ({ characterID }: { characterID: string }) => {
           </div>
         </div>
       )}
-      {error && (
-        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
-          <p className=' flex justify-center items-center font-mali text-white'>Error: {error.message}</p>
-        </div>
-      )}
+      {error && <Error message={error.message} />}
       {!loading && !error && (
         <>
           <div className='mt-10 flex flex-col sm:ml-10 sm:flex-row sm:items-center'>
             <div className='max-w-[350px] mb-6 flex flex-col items-center self-center justify-center'>
               <img
                 src={data?.character?.image || undefined}
-                alt={"character img"}
+                alt='character img'
                 className={
                   "w-[200px] h-[200px] sm:w-auto sm:h-auto rounded-full border-[1px] border-[#bfd84d] drop-shadow-[0px_0px_20px_#12b0c9]"
                 }
@@ -73,7 +70,7 @@ const CharacterPage = ({ characterID }: { characterID: string }) => {
               </div>
             </div>
             <div className='mb-3 sm:mb-20 mx-11 flex-start'>
-              <CharacterDetailParagraph label='ID' value={characterID} />
+              <CharacterDetailParagraph label='Id' value={characterId} />
               <CharacterDetailParagraph label='Status' value={data?.character?.status} />
               <CharacterDetailParagraph label='Gender' value={data?.character?.gender} />
               <CharacterDetailParagraph label='Last known location' value={data?.character?.location?.name} />
@@ -81,19 +78,20 @@ const CharacterPage = ({ characterID }: { characterID: string }) => {
           </div>
           <div className='mt-2 mx-10'>
             <span className='text-lg text-[#12b0c9] drop-shadow-[0px_0px_1px_#bfd84d] font-medium'>EPISODES</span>
-            <ul className='mt-2 flex flex-wrap justify-start items-start'>
-              {data?.character?.episode.map((episode, id) =>
-                episode?.name ? <EpisodeTag name={episode.name} key={id} /> : null
-              )}
-            </ul>
+            {data?.character?.episode != undefined && data.character.episode.length > 0 ? (
+              <ul className='mt-2 flex flex-wrap justify-start items-start'>
+                {data?.character?.episode.map((episode, id) =>
+                  episode?.name ? <EpisodeTag name={episode.name} key={id} /> : null
+                )}
+              </ul>
+            ) : (
+              <p>Character did not cast in any episode</p>
+            )}
           </div>
         </>
       )}
-      <Link
-        href={"/characters"}
-        className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
-      >
-        <img src={"../../go-back.svg"} alt={"back icon"} />
+      <Link href='/characters' className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'>
+        <img src='../../go-back.svg' alt='back icon' />
       </Link>
     </div>
   );
@@ -102,8 +100,8 @@ const CharacterPage = ({ characterID }: { characterID: string }) => {
 export default CharacterPage;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const characterID = getServerSideQueryParamFromContext(context, "characterID");
+  const characterId = getServerSideQueryParamFromContext(context, "characterID");
   return {
-    props: { characterID },
+    props: { characterId },
   };
 };

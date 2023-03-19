@@ -1,6 +1,6 @@
 interface CharacterDetailParagraphProps {
   label: string;
-  value: string | null | undefined;
+  value?: string | null;
 }
 
 const CharacterDetailParagraph = ({ label, value }: CharacterDetailParagraphProps) => {

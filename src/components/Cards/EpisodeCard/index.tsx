@@ -2,8 +2,8 @@ import { useState } from "react";
 import classNames from "classnames";
 import { graphql, useFragment, FragmentType } from "../../../gql";
 
-const EPISODES_CARD_FRAGMENT = graphql(/* GraphQL */ `
-  fragment EpisodesCard_CardFragment on Episode {
+const EPISODE_CARD_FRAGMENT = graphql(/* GraphQL */ `
+  fragment EpisodeCard_CardFragment on Episode {
     id
     name
     air_date
@@ -12,12 +12,12 @@ const EPISODES_CARD_FRAGMENT = graphql(/* GraphQL */ `
 `);
 
 type EpisodeCardProps = {
-  cardData: FragmentType<typeof EPISODES_CARD_FRAGMENT>;
+  cardData: FragmentType<typeof EPISODE_CARD_FRAGMENT>;
 };
 
 const Card = ({ cardData, ...rest }: EpisodeCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { name, air_date: airDate, episode } = useFragment(EPISODES_CARD_FRAGMENT, cardData);
+  const { name, air_date: airDate, episode } = useFragment(EPISODE_CARD_FRAGMENT, cardData);
 
   return (
     <div
