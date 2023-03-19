@@ -1,10 +1,13 @@
+import classNames from "classnames";
+
 interface ErrorProps {
   message: string;
+  className?: string;
 }
 
-export default function Error({ message }: ErrorProps) {
+export default function Error({ message, className }: ErrorProps) {
   return (
-    <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+    <div className={classNames("w-full text-[50px] text-center", className)}>
       {message ? (
         <p className=' flex justify-center items-center font-mali text-white'>Error: {message}</p>
       ) : (

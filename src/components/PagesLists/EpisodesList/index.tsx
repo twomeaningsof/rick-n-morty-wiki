@@ -31,9 +31,9 @@ export default function EpisodesList({ episodesListData, loading, error, handleF
   const dataLength = fragmentData?.results?.length || 0;
   const hasMore = fragmentData?.info?.next !== null;
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading className='mt-16' />;
 
-  if (error && !episodesListData) return <Error message={error.message}></Error>;
+  if (error && !episodesListData) return <Error message={error.message} className='mt-16'></Error>;
 
   if (!episodesListData) return null;
 

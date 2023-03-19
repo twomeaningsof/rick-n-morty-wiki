@@ -1,8 +1,9 @@
 import { ColorRing } from "react-loader-spinner";
+import classNames from "classnames";
 
-export default function Loading() {
+export default function Loading({ className }: { className?: string }) {
   return (
-    <div className='w-full mt-20 bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
+    <div className={classNames("w-full text-[50px]", className)}>
       <div className='w-full  flex justify-center items-center font-mali text-white'>
         <p className='mr-4'>Loading</p>
         <ColorRing
