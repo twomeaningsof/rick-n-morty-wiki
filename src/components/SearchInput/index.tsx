@@ -22,7 +22,7 @@ const SearchInput = ({ className, onChange, ...props }: SearchInputProps) => (
       onChange={({ currentTarget: { value } }) => onChange(value)}
       {...props}
     />
-    <Image className='w-[20px] h-auto m-2 mr-3 object-contain' src={search} alt={"search icon"} />
+    <Image className='w-[20px] h-auto m-2 mr-3 object-contain' src={search} alt='search icon' />
   </div>
 );
 

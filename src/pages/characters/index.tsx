@@ -4,11 +4,9 @@ import { graphql } from "../../gql/";
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { ColorRing } from "react-loader-spinner";
-import CharactersCardList from "../../components/CardLists/CharactersCardList";
 import SearchInput from "../../components/SearchInput";
 import Select from "../../components/Select";
+import CharacterList from "../../components/PagesLists/CharactersList";
 import useDebounce from "../../hooks/useDebounce";
 import getServerSideQueryParamFromContext from "../../helpers/getServerSideQueryParamFromContext";
 import updateQueryParamForRouter from "../../helpers/routerQueryManipulation";
@@ -26,14 +24,13 @@ const GET_CHARACTERS_QUERY = graphql(/* GraphQL */ `
   query GetCharacters_Query($page: Int, $name: String, $gender: String, $status: String) {
     characters(page: $page, filter: { name: $name, gender: $gender, status: $status }) {
       info {
-        count
         pages
         next
       }
       results {
         id
       }
-      ...CharactersCardList_QueryFragment
+      ...CharactersList_QueryFragment
     }
   }
 `);
@@ -94,8 +91,6 @@ function useCharactersList({ name, gender, status }: CharactersPagePageProps) {
 
   return {
     characters: data?.characters,
-    dataLength: data?.characters?.results?.length || 0,
-    hasMore: data?.characters?.info?.next !== null,
     loading,
     error,
     searchInput,
@@ -111,8 +106,6 @@ function useCharactersList({ name, gender, status }: CharactersPagePageProps) {
 const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
   const {
     characters,
-    dataLength,
-    hasMore,
     loading,
     error,
     searchInput,
@@ -133,8 +126,8 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
       <div className='flex flex-col md:flex-row md:justify-center lg:justify-start items-center'>
         <img
           className='w-[200px] h-[200px] md:w-[240px] md:h-[240px] xl:w-[300px] xl:h-[300px] max-md:ml-0 ml-8 pointer-events-none select-none'
-          src={"logo.png"}
-          alt={"Rick'n'Morty Logo"}
+          src='logo.png'
+          alt="Rick'n'Morty Logo"
           draggable={false}
         />
         <h1
@@ -161,62 +154,18 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
           onInput={handleSetStatus}
         />
         <Link
-          href={"/"}
+          href='/'
           className='w-28 h-8 lg:ml-auto lg:mr-10 flex justify-center items-center rounded-lg bg-white font-mali text-base border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_30px_#12b0c9]'
         >
           Home
         </Link>
       </div>
-      {loading && (
-        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
-          <div className='w-full  flex justify-center items-center font-mali text-white'>
-            <p className='mr-4'>Loading</p>
-            <ColorRing
-              visible={true}
-              height='80'
-              width='80'
-              ariaLabel='blocks-loading'
-              colors={["#bfd84d", "#9db33c", "#429EA6", "#12b0c9", "#51E5FF"]}
-            />
-          </div>
-        </div>
-      )}
-      {error && (
-        <div className='w-full bg-black/[.85] text-[50px] [background-image:url("../../public/endless-constellation.svg")]'>
-          <p className=' flex justify-center items-center font-mali text-white'>Error: {error.message}</p>
-        </div>
-      )}
-      {!loading && !error && (
-        <InfiniteScroll
-          dataLength={dataLength}
-          next={handleFetchMore}
-          hasMore={hasMore}
-          loader={
-            <div className='w-full flex justify-center font-mali'>
-              <ColorRing
-                visible={true}
-                height='80'
-                width='80'
-                ariaLabel='blocks-loading'
-                colors={["#bfd84d", "#9db33c", "#429EA6", "#12b0c9", "#51E5FF"]}
-              />
-            </div>
-          }
-          endMessage={
-            dataLength === 0 ? (
-              <p className='flex justify-center mt-20 mb-10 font-mali text-white text-center text-4xl font-medium select-none'>
-                Sorry, there is no match.
-              </p>
-            ) : (
-              <p className='flex justify-center mt-4 mb-10 font-mali text-white text-center text-4xl font-medium select-none'>
-                Yay! You have seen it all.
-              </p>
-            )
-          }
-        >
-          {characters && <CharactersCardList cardListData={characters} />}
-        </InfiniteScroll>
-      )}
+      <CharacterList
+        charactersListData={characters}
+        loading={loading}
+        error={error}
+        handleFetchMore={handleFetchMore}
+      />
     </div>
   );
 };

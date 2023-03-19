@@ -11,13 +11,13 @@ const WelcomePage = () => {
       </h1>
       <div className='mt-5 flex flex-col lg:flex-row gap-x-10'>
         <Link
-          href={"/characters"}
+          href='/characters'
           className='w-40 h-10 mb-5 flex justify-center items-center rounded bg-white font-mali border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_25px_#12b0c9]'
         >
           Characters
         </Link>
         <Link
-          href={"/episodes"}
+          href='/episodes'
           className='w-40 h-10 flex justify-center items-center rounded bg-white font-mali border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_25px_#12b0c9]'
         >
           Episodes
