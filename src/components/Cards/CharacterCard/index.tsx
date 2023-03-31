@@ -1,4 +1,5 @@
 import Link from "next/link";
+import routes from "../../../constants/routes";
 import { graphql, useFragment, FragmentType } from "../../../gql";
 
 const lifeStatusImages = {
@@ -37,7 +38,7 @@ const CharacterCard = ({ cardData, ...rest }: CharacterCardProps) => {
     >
       <div className='h-full relative flex flex-col text-black'>
         {image && <img src={image} width={300} height={300} alt='Character image' />}
-        <Link className='h-full' href={`/characters/character/${id}`}>
+        <Link className='h-full' href={routes.getCharacterRoute(id)}>
           <div className='max-w-[300px] h-full p-2 flex justify-between items-center bg-white cursor-pointer'>
             <div className='ml-2 flex font-mali text-2xl select-none'>{name}</div>
             <img

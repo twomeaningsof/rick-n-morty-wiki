@@ -7,6 +7,7 @@ import CharacterDetailParagraph from "../../../components/DetailParagraphs/Chara
 import EpisodeTag from "../../../components/EpisodeTag";
 import Loading from "../../../components/DataState/Loading";
 import Error from "../../../components/DataState/Error";
+import routes from "../../../constants/routes";
 
 const GET_CHARACTER_QUERY = graphql(/* GraphQL */ `
   query GetCharacter_Query($id: ID!) {
@@ -93,7 +94,10 @@ const CharacterPage = ({ characterId }: { characterId: string }) => {
           )}
         </div>
       </>
-      <Link href='/characters' className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'>
+      <Link
+        href={routes.getHomeRoute()}
+        className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
+      >
         <img src='../../go-back.svg' alt='back icon' />
       </Link>
     </div>

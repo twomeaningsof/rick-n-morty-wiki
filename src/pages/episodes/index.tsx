@@ -11,6 +11,7 @@ import useDebounce from "../../hooks/useDebounce";
 import getServerSideQueryParamFromContext from "../../helpers/getServerSideQueryParamFromContext";
 import updateQueryParamForRouter from "../../helpers/routerQueryManipulation";
 import logo from "../../../public/logo.png";
+import routes from "../../constants/routes";
 
 interface EpisodesPagePageProps {
   name: string | null;
@@ -104,7 +105,7 @@ const EpisodesPage = ({ name }: EpisodesPagePageProps) => {
       <div className='flex flex-wrap flex-col md:flex-row md:m-2 lg:ml-10 xl:ml-16 md:gap-y-4 gap-x-8 xl:gap-x-14 justify-center lg:justify-start items-center'>
         <SearchInput value={searchInput} placeholder='Search..' className='max-md:mb-5' onChange={handleSetName} />
         <Link
-          href='/'
+          href={routes.getHomeRoute()}
           className='w-28 h-8 lg:ml-auto lg:mr-10 flex justify-center items-center rounded-lg bg-white font-mali text-base border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_30px_#12b0c9]'
         >
           Home

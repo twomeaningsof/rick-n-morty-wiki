@@ -7,6 +7,7 @@ import EpisodeDetailParagraph from "../../../components/DetailParagraphs/Episode
 import Loading from "../../../components/DataState/Loading";
 import Error from "../../../components/DataState/Error";
 import CharacterCard from "../../../components/Cards/CharacterCard";
+import routes from "../../../constants/routes";
 
 const GET_EPISODE_QUERY = graphql(/* GraphQL */ `
   query GetEpisode_Query($id: ID!) {
@@ -69,7 +70,10 @@ const EpisodePage = ({ episodeId }: { episodeId: string }) => {
           })}
         </div>
       </>
-      <Link href='/episodes' className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'>
+      <Link
+        href={routes.getEpisodesRoute()}
+        className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
+      >
         <img src='../../go-back.svg' alt='back icon' />
       </Link>
     </div>

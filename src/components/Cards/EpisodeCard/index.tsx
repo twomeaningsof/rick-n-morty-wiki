@@ -2,6 +2,7 @@ import { useState } from "react";
 import classNames from "classnames";
 import { graphql, useFragment, FragmentType } from "../../../gql";
 import Link from "next/link";
+import routes from "../../../constants/routes";
 
 const EPISODE_CARD_FRAGMENT = graphql(/* GraphQL */ `
   fragment EpisodeCard_CardFragment on Episode {
@@ -21,7 +22,7 @@ const Card = ({ cardData, ...rest }: EpisodeCardProps) => {
   const { id, name, air_date: airDate, episode } = useFragment(EPISODE_CARD_FRAGMENT, cardData);
 
   return (
-    <Link href={`/episodes/episode/${id}`}>
+    <Link href={routes.getEpisodeRoute(id)}>
       <div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
