@@ -23,7 +23,7 @@ interface CharactersListProps {
   charactersListData?: FragmentType<typeof CHARACTERS_LIST_QUERY_FRAGMENT> | null;
   loading: boolean;
   error?: ApolloError;
-  handleFetchMore: () => Promise<ApolloQueryResult<GetCharacters_QueryQuery>>;
+  handleFetchMore?: () => Promise<ApolloQueryResult<GetCharacters_QueryQuery>>;
 }
 
 export default function CharactersList({ charactersListData, loading, error, handleFetchMore }: CharactersListProps) {
@@ -40,7 +40,7 @@ export default function CharactersList({ charactersListData, loading, error, han
   return (
     <InfiniteScroll
       dataLength={dataLength}
-      next={handleFetchMore}
+      next={handleFetchMore || (() => null)}
       hasMore={hasMore}
       loader={
         <div className='w-full mt-14 flex justify-center font-mali'>

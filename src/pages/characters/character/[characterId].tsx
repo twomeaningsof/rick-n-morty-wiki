@@ -3,10 +3,11 @@ import { NextPageContext } from "next";
 import Link from "next/link";
 import { graphql } from "../../../gql";
 import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
-import CharacterDetailParagraph from "../../../components/CharacterDetailParagraph";
+import CharacterDetailParagraph from "../../../components/DetailParagraphs/CharacterDetailParagraph";
 import EpisodeTag from "../../../components/EpisodeTag";
 import Loading from "../../../components/DataState/Loading";
 import Error from "../../../components/DataState/Error";
+import routes from "../../../constants/routes";
 
 const GET_CHARACTER_QUERY = graphql(/* GraphQL */ `
   query GetCharacter_Query($id: ID!) {
@@ -84,8 +85,8 @@ const CharacterPage = ({ characterId }: { characterId: string }) => {
           <span className='text-lg text-[#12b0c9] drop-shadow-[0px_0px_1px_#bfd84d] font-medium'>EPISODES</span>
           {character?.episode != undefined && character.episode.length > 0 ? (
             <ul className='mt-2 flex flex-wrap justify-start items-start'>
-              {episodesCastedIn.map((episode, id) =>
-                episode?.name ? <EpisodeTag name={episode.name} key={id} /> : null
+              {episodesCastedIn.map((episode) =>
+                episode?.name ? <EpisodeTag name={episode.name} id={episode.id} key={episode.id} /> : null
               )}
             </ul>
           ) : (
@@ -93,7 +94,10 @@ const CharacterPage = ({ characterId }: { characterId: string }) => {
           )}
         </div>
       </>
-      <Link href='/characters' className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'>
+      <Link
+        href={routes.getHomeRoute()}
+        className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
+      >
         <img src='../../go-back.svg' alt='back icon' />
       </Link>
     </div>

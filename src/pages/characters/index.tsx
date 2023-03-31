@@ -10,6 +10,7 @@ import CharacterList from "../../components/PagesLists/CharactersList";
 import useDebounce from "../../hooks/useDebounce";
 import getServerSideQueryParamFromContext from "../../helpers/getServerSideQueryParamFromContext";
 import updateQueryParamForRouter from "../../helpers/routerQueryManipulation";
+import routes from "../../constants/routes";
 
 const genderOptions = ["Female", "Male", "Genderless", "Unknown"];
 const lifeStatusOptions = ["Alive", "Dead", "Unknown"];
@@ -154,7 +155,7 @@ const CharactersPage = ({ name, gender, status }: CharactersPagePageProps) => {
           onInput={handleSetStatus}
         />
         <Link
-          href='/'
+          href={routes.getHomeRoute()}
           className='w-28 h-8 lg:ml-auto lg:mr-10 flex justify-center items-center rounded-lg bg-white font-mali text-base border-[3px] border-[#bfd84d] drop-shadow-[0px_2px_30px_#12b0c9]'
         >
           Home
