@@ -8,18 +8,17 @@ interface AudioModalProps {
 
 export default function AudioModal({ onChoiceFunction }: AudioModalProps) {
   const [toggle, setToggle] = useState(true);
-  const audio = useContext(AudioReactContext);
+  const { setIsAudioEnabled } = useContext(AudioReactContext);
 
   const handleEnableAudioClick = () => {
-    audio.setIsAudioEnabled(true);
+    setIsAudioEnabled(true);
     setToggle(false);
     onChoiceFunction?.();
   };
 
   const handleDisableAudioClick = () => {
-    audio.setIsAudioEnabled(false);
+    setIsAudioEnabled(false);
     setToggle(false);
-    onChoiceFunction?.();
   };
 
   return toggle ? (
