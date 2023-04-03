@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import classNames from "classnames";
 import { graphql, useFragment, FragmentType } from "../../../gql";
 import Link from "next/link";
 import routes from "../../../constants/routes";
+import { AudioReactContext } from "../../../contexts";
+import playGameClickSound from "../../../helpers/playGameClickSound";
 
 const EPISODE_CARD_FRAGMENT = graphql(/* GraphQL */ `
   fragment EpisodeCard_CardFragment on Episode {
@@ -20,9 +22,12 @@ type EpisodeCardProps = {
 const Card = ({ cardData, ...rest }: EpisodeCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { id, name, air_date: airDate, episode } = useFragment(EPISODE_CARD_FRAGMENT, cardData);
+  const { isAudioEnabled } = useContext(AudioReactContext);
+
+  const handleOnCardClickSound = () => isAudioEnabled && playGameClickSound();
 
   return (
-    <Link href={routes.getEpisodeRoute(id)}>
+    <Link href={routes.getEpisodeRoute(id)} onClick={handleOnCardClickSound}>
       <div
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}

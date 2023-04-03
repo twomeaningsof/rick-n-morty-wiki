@@ -1,13 +1,16 @@
+import { useContext } from "react";
 import { useQuery } from "@apollo/client";
+import { graphql } from "../../../gql";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { graphql } from "../../../gql";
-import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
 import EpisodeDetailParagraph from "../../../components/DetailParagraphs/EpisodeDetailParagraph";
 import Loading from "../../../components/DataState/Loading";
 import Error from "../../../components/DataState/Error";
 import CharacterCard from "../../../components/Cards/CharacterCard";
 import routes from "../../../constants/routes";
+import { AudioReactContext } from "../../../contexts";
+import playSciFiSound from "../../../helpers/playSciFiSound";
+import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
 
 const GET_EPISODE_QUERY = graphql(/* GraphQL */ `
   query GetEpisode_Query($id: ID!) {
@@ -35,23 +38,26 @@ const useEpisode = (episodeId: string) => {
 
 const EpisodePage = ({ episodeId }: { episodeId: string }) => {
   const { episode, charactersCastedIn, loading, error } = useEpisode(episodeId);
+  const { isAudioEnabled } = useContext(AudioReactContext);
+
+  const handleSoundOnGoBackButtonClick = () => isAudioEnabled && playSciFiSound();
 
   if (loading)
     return (
-      <div className='w-full min-h-full flex justify-center text-[14px] [background-image:url("../../public/endless-constellation.svg")]'>
+      <div className='w-full min-h-full flex justify-center text-[14px] bg-constellation'>
         <Loading className='mt-24' />;
       </div>
     );
 
   if (error)
     return (
-      <div className='w-full min-h-full flex justify-center text-[14px] [background-image:url("../../public/endless-constellation.svg")]'>
+      <div className='w-full min-h-full flex justify-center text-[14px] bg-constellation'>
         <Error message={error.message} className='mt-24'></Error>;
       </div>
     );
 
   return (
-    <div className='w-full min-h-full flex flex-col font-mali text-white [background-image:url("../../public/endless-constellation.svg")]'>
+    <div className='w-full min-h-full flex flex-col font-mali text-white bg-constellation select-none'>
       <>
         <div className='mt-10 sm:ml-10'>
           <div className='mb-3 sm: ml-11 mr-20 flex-start'>
@@ -72,6 +78,7 @@ const EpisodePage = ({ episodeId }: { episodeId: string }) => {
       </>
       <Link
         href={routes.getEpisodesRoute()}
+        onClick={handleSoundOnGoBackButtonClick}
         className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
       >
         <img src='../../go-back.svg' alt='back icon' />

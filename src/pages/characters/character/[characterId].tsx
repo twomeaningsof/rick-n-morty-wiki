@@ -1,13 +1,16 @@
+import { useContext } from "react";
 import { useQuery } from "@apollo/client";
+import { graphql } from "../../../gql";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { graphql } from "../../../gql";
-import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
 import CharacterDetailParagraph from "../../../components/DetailParagraphs/CharacterDetailParagraph";
 import EpisodeTag from "../../../components/EpisodeTag";
 import Loading from "../../../components/DataState/Loading";
 import Error from "../../../components/DataState/Error";
 import routes from "../../../constants/routes";
+import { AudioReactContext } from "../../../contexts";
+import playSciFiSound from "../../../helpers/playSciFiSound";
+import getServerSideQueryParamFromContext from "../../../helpers/getServerSideQueryParamFromContext";
 
 const GET_CHARACTER_QUERY = graphql(/* GraphQL */ `
   query GetCharacter_Query($id: ID!) {
@@ -43,23 +46,26 @@ const useCharacter = (characterId: string) => {
 
 const CharacterPage = ({ characterId }: { characterId: string }) => {
   const { character, episodesCastedIn, loading, error } = useCharacter(characterId);
+  const { isAudioEnabled } = useContext(AudioReactContext);
+
+  const handleSoundOnGoBackButtonClick = () => isAudioEnabled && playSciFiSound();
 
   if (loading)
     return (
-      <div className='w-full min-h-full flex justify-center text-[14px] [background-image:url("../../public/endless-constellation.svg")]'>
+      <div className='w-full min-h-full flex justify-center text-[14px] bg-constellation'>
         <Loading className='mt-24' />;
       </div>
     );
 
   if (error)
     return (
-      <div className='w-full min-h-full flex justify-center text-[14px] [background-image:url("../../public/endless-constellation.svg")]'>
+      <div className='w-full min-h-full flex justify-center text-[14px] bg-constellation'>
         <Error message={error.message} className='mt-24'></Error>;
       </div>
     );
 
   return (
-    <div className='w-full min-h-full flex flex-col font-mali text-white [background-image:url("../../public/endless-constellation.svg")]'>
+    <div className='w-full min-h-full flex flex-col font-mali text-white bg-constellation select-none'>
       <>
         <div className='mt-10 flex flex-col sm:ml-10 sm:flex-row sm:items-center'>
           <div className='max-w-[350px] mb-6 flex flex-col items-center self-center justify-center'>
@@ -67,7 +73,7 @@ const CharacterPage = ({ characterId }: { characterId: string }) => {
               src={character?.image || undefined}
               alt='character img'
               className={
-                "w-[200px] h-[200px] sm:w-auto sm:h-auto rounded-full border-[1px] border-[#bfd84d] drop-shadow-[0px_0px_20px_#12b0c9]"
+                "w-[200px] h-[200px] sm:w-auto sm:h-auto rounded-full border-[1px] border-[#bfd84d] drop-shadow-[0px_0px_20px_#12b0c9] pointer-events-none"
               }
             />
             <div className='mt-6 text-4xl tracking-wide text-center text-[#bfd84d] drop-shadow-[0px_0px_2px_#12b0c9]'>
@@ -95,7 +101,8 @@ const CharacterPage = ({ characterId }: { characterId: string }) => {
         </div>
       </>
       <Link
-        href={routes.getHomeRoute()}
+        href={routes.getCharactersRoute()}
+        onClick={handleSoundOnGoBackButtonClick}
         className='w-[50px] h-[50px] mt-6 mr-4 rounded-2xl absolute top-0 right-0 bg-slate-600'
       >
         <img src='../../go-back.svg' alt='back icon' />
