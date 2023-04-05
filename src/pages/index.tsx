@@ -21,7 +21,7 @@ const WelcomePage = ({ openAudioModal }: WelcomePageProps) => {
     <>
       <div className='w-full min-h-full flex flex-col items-center bg-main-page bg-cover bg-no-repeat bg-right md:bg-center shadow-[0_2px_50px_-10px_#bfd84d_inset]'>
         <h1
-          className='mt-24 lg:mt-16 2xl:mt-10 mx-10 font-gochi text-[70px] md:text-[85px] lg:text-[120px] xl:text-[150px] 2xl:text-[165px] text-center tracking-widest md:leading-[1.15] 2xl:leading-[1] md:backdrop-blur-md text-[#12b0c9] drop-shadow-[-4px_0px_4px_#bfd84d] md:drop-shadow-[-5px_0px_4px_#bfd84d] lg:drop-shadow-[-6px_0px_4px_#bfd84d] 2xl:drop-shadow-[-7px_0px_4px_#bfd84d] [text-shadow:#423500_3px_0_2px] md:[text-shadow:#423500_4px_0_3px] lg:[text-shadow:#423500_5px_0_4px] 2xl:[text-shadow:#423500_6px_0_5px] select-none'
+          className='mt-24 lg:mt-16 2xl:mt-10 mx-10 font-gochi text-[70px] md:text-[85px] lg:text-[120px] xl:text-[150px] 2xl:text-[165px] text-center tracking-widest md:leading-[1.15] 2xl:leading-[1] text-[#12b0c9] drop-shadow-[-4px_0px_4px_#bfd84d] md:drop-shadow-[-5px_0px_4px_#bfd84d] lg:drop-shadow-[-6px_0px_4px_#bfd84d] 2xl:drop-shadow-[-7px_0px_4px_#bfd84d] [text-shadow:#423500_3px_0_2px] md:[text-shadow:#423500_4px_0_3px] lg:[text-shadow:#423500_5px_0_4px] 2xl:[text-shadow:#423500_6px_0_5px] select-none'
           draggable={false}
         >
           Rick and Morty
