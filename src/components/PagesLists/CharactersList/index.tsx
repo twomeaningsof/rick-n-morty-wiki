@@ -33,7 +33,7 @@ export default function CharactersList({ charactersListData, loading, error, han
 
   if (loading) return <Loading className='mt-16' />;
 
-  if (error) return <Error message={error.message} className='mt-16'></Error>;
+  if (error && !charactersListData) return <Error message={error.message} className='mt-16'></Error>;
 
   if (!charactersListData) return null;
 

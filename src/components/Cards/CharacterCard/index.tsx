@@ -11,7 +11,7 @@ const lifeStatusImages = {
   unknown: "/unknown.png",
 };
 
-const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
+export const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
   fragment CharacterCard_CardFragment on Character {
     id
     image
@@ -20,7 +20,7 @@ const CHARACTER_CARD_FRAGMENT = graphql(/* GraphQL */ `
   }
 `);
 
-type CharacterCardProps = {
+export type CharacterCardProps = {
   cardData: FragmentType<typeof CHARACTER_CARD_FRAGMENT>;
 };
 

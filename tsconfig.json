@@ -15,6 +15,12 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components/Cards/CharacterCard/__tests__/CharacterCard.test.jsx",
+    "src/components/Cards/CharacterCard/__tests__/CharacterCard.test.jsx"
+  ],
   "exclude": ["node_modules"]
 }
